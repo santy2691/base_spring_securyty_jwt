@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +34,7 @@ public class AuthenticationServices {
 
         if (!usuarioRepository.findByEmail(request.getEmail()).isEmpty()) {
             response.setMessage("el usuario " + request.getEmail() + " ya existe");
+            response.setError("el usuario ya existe");
             return response;
         }
 
@@ -56,7 +58,7 @@ public class AuthenticationServices {
         return response;
     }
 
-    public AuthenticationResponse autentication(AuthenticationRequest request) {
+    public AuthenticationResponse autentication(AuthenticationRequest request) throws BadCredentialsException {
         AuthenticationResponse response = new AuthenticationResponse();
         try {
 
@@ -65,6 +67,7 @@ public class AuthenticationServices {
                     .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         } catch (BadCredentialsException e) {
             response.setMessage("email o contraseña invalido");
+            response.setError(e.getMessage());
             return response;
         }
 
