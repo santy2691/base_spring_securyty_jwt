@@ -6,18 +6,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.tutorial.login.bean.UsuarioBean;
+
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoder;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
@@ -41,8 +38,10 @@ public class JwtServices {
     }
 
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<String,Object>(),userDetails);
+    public String generateToken(UsuarioBean userDetails) {
+        HashMap<String,Object> claim = new HashMap<>();
+        claim.put("id_usuario", userDetails.getId());
+        return generateToken(claim,(UserDetails)userDetails);
     }
 
 
@@ -51,7 +50,7 @@ public class JwtServices {
                 .setClaims(extraClaim)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24)).
+                .setExpiration(new Date(System.currentTimeMillis() + 100000 * 60 * 24)).
                 signWith(getSignInKey(),SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -69,6 +68,12 @@ public class JwtServices {
 
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
+    }
+
+    public Long extractIdUser(String token) {
+        Claims claims =  this.extractAClaims(token);
+        Long idUser = claims.get("id_usuario",Long.class);
+        return idUser;
     }
 
 

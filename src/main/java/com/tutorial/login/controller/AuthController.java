@@ -2,7 +2,6 @@ package com.tutorial.login.controller;
 
 import java.time.LocalDateTime;
 
-import org.apache.catalina.connector.Response;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tutorial.login.DTO.AuthenticationRequest;
@@ -18,7 +16,7 @@ import com.tutorial.login.DTO.AuthenticationResponse;
 import com.tutorial.login.DTO.RegisterRequest;
 import com.tutorial.login.services.AuthenticationServices;
 
-import jakarta.servlet.http.HttpServletResponse;
+
 
 @RestController
 @RequestMapping(value = "/auth")
