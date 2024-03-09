@@ -1,9 +1,6 @@
 package com.tutorial.login.config;
 
-import java.io.Console;
 import java.io.IOException;
-import java.util.Base64;
-import java.util.Date;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +12,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.tutorial.login.services.JwtServices;
 
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.io.Decoders;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,6 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String tokenHeader = request.getHeader("Authorization");
         String jwt;
         String userName;
+        Long idUser;
         // verifico si el el token existe
         if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
             // si el token no existe sigo con el siguiente filtro
@@ -46,6 +43,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         jwt = tokenHeader.split(" ")[1];
         try {
             userName = jwtServices.extractUserName(jwt);
+            idUser = jwtServices.extractIdUser(jwt);
     
             if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userName);
