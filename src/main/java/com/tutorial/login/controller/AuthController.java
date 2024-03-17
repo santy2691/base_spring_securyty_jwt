@@ -16,8 +16,10 @@ import com.tutorial.login.DTO.AuthenticationResponse;
 import com.tutorial.login.DTO.RegisterRequest;
 import com.tutorial.login.services.AuthenticationServices;
 
+import lombok.extern.slf4j.Slf4j;
 
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/auth")
 public class AuthController {
@@ -32,6 +34,7 @@ public class AuthController {
 
     @PostMapping(value = "/login")
     public ResponseEntity<?> login(@RequestBody AuthenticationRequest request) {
+        log.info("BEGIN login");
         AuthenticationResponse response = autenticationServices.autentication(request);
        // verifico que no hay errores
         if (response.getError() != null && !response.getError().isEmpty()) {
@@ -42,6 +45,7 @@ public class AuthController {
             .put("error", response.getError());
             return new ResponseEntity<>(json.toString(), HttpStatus.FORBIDDEN);
         }
+        log.info("END login");
         return ResponseEntity.ok(response);
     }
 
